@@ -1,6 +1,4 @@
-@extends('layouts.app')
-
-@section('content')
+<x-app-layout>
     <div class="container">
         <h1>Logs</h1>
         <a href="{{ route('logs.create') }}" class="btn btn-primary mb-3">Add Log</a>
@@ -28,4 +26,4 @@
         </table>
         {{ $logs->links() }}
     </div>
-@endsection
+</x-app-layout>
