@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('user_roles', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->unique(); // Admin, Technician, Viewer
             $table->timestamps();
         });
     }

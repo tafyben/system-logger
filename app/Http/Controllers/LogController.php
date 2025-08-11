@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Log;
+use App\Models\LogType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LogController extends Controller
 {
@@ -12,54 +14,34 @@ class LogController extends Controller
      */
     public function index()
     {
-        //
+        $logs = Log::with(['user', 'type'])
+            ->orderBy('event_time', 'desc')
+            ->paginate(10);
+
+        return view('logs.index', compact('logs'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $types = LogType::all();
+        return view('logs.create', compact('types'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
-    }
+        $validated = $request->validate([
+            'log_type_id' => 'required|exists:log_types,id',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'affected_system' => 'required|string|max:255',
+            'changes' => 'nullable|array',
+            'event_time' => 'required|date'
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Log $log)
-    {
-        //
-    }
+        $validated['user_id'] = Auth::id();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Log $log)
-    {
-        //
-    }
+        Log::create($validated);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Log $log)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Log $log)
-    {
-        //
+        return redirect()->route('logs.index')->with('success', 'Log entry added successfully.');
     }
 }

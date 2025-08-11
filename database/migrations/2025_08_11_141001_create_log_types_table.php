@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('log_types', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->unique(); // PC Change, Website Update
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }
