@@ -1,29 +1,46 @@
 <x-app-layout>
-    <div class="container">
-        <h1>Logs</h1>
-        <a href="{{ route('logs.create') }}" class="btn btn-primary mb-3">Add Log</a>
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th>Time</th>
-                <th>Type</th>
-                <th>Title</th>
-                <th>System</th>
-                <th>User</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach($logs as $log)
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <x-slot name="header">
+            <h2 class="font-semibold text-2xl text-gray-800 dark:text-gray-200 leading-tight">
+                {{ __('Logs - All') }}
+            </h2>
+        </x-slot>
+
+        <div class="flex justify-between items-center mb-4">
+            <a href="{{ route('logs.create') }}"
+               class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-lg font-semibold text-sm text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                + Add Log
+            </a>
+        </div>
+
+        <div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead class="bg-gray-50 dark:bg-gray-700">
                 <tr>
-                    <td>{{ $log->event_time }}</td>
-                    <td>{{ $log->type->name }}</td>
-                    <td>{{ $log->title }}</td>
-                    <td>{{ $log->affected_system }}</td>
-                    <td>{{ $log->user->name }}</td>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Time - Logged</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Title</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">System</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">User</th>
                 </tr>
-            @endforeach
-            </tbody>
-        </table>
-        {{ $logs->links() }}
+                </thead>
+                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                @foreach($logs as $log)
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                        <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-200">{{ $log->event_time }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-200">{{ $log->type->name }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-200">{{ $log->title }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-200">{{ $log->affected_system }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-200">{{ $log->user->name }}</td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-4">
+            {{ $logs->links() }}
+        </div>
     </div>
+
 </x-app-layout>
