@@ -44,4 +44,25 @@ class LogController extends Controller
 
         return redirect()->route('logs.index')->with('success', 'Log entry added successfully.');
     }
+
+
+    public function update(Request $request, Log $log)
+    {
+        $request->validate([
+            'log_type_id'     => 'required|exists:log_types,id',
+            'title'           => 'required|string|max:255',
+            'description'     => 'nullable|string',
+            'affected_system' => 'required|string|max:255',
+            'event_time'      => 'required|date',
+        ]);
+
+        $log->update($request->all());
+
+        // Spatie automatically records this update with before/after in activity_log
+
+        return redirect()->route('logs.index')
+            ->with('success', 'Log updated successfully. Changes have been recorded.');
+    }
+
+
 }

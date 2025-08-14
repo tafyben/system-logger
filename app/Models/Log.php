@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Log extends Model
 {
+    use LogsActivity;
     protected $fillable = [
         'user_id',
         'log_type_id',
@@ -15,6 +18,17 @@ class Log extends Model
         'changes',
         'event_time'
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll()
+            ->logOnlyDirty() // only log changed fields
+            ->useLogName('log_changes')
+            ->setDescriptionForEvent(function (string $eventName) {
+                return "Log entry was {$eventName}";
+            });
+    }
 
     protected $casts = [
         'changes' => 'array',

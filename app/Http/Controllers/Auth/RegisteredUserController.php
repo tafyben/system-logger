@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Log;
+use App\Models\LogType;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -22,11 +24,6 @@ class RegisteredUserController extends Controller
         return view('auth.register');
     }
 
-    /**
-     * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
@@ -39,6 +36,23 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+        ]);
+
+        // Create a log entry for the new registration
+        $logTypeId = LogType::where('name', 'User Action')->value('id')
+            ?? LogType::first()->id; // Fallback to first type if missing
+
+        Log::create([
+            'user_id'         => $user->id,
+            'log_type_id'     => $logTypeId,
+            'title'           => 'New User Registration',
+            'description'     => "User {$user->name} ({$user->email}) has registered.",
+            'affected_system' => 'User Management System',
+            'changes'         => json_encode([
+                'name'  => $user->name,
+                'email' => $user->email
+            ]),
+            'event_time'      => now(),
         ]);
 
         event(new Registered($user));
