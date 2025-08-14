@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             LogTypeSeeder::class,
             UserRoleSeeder::class,
             LogsTableSeeder::class,
+            ActivityLogSeeder::class,
 
 
         ]);
