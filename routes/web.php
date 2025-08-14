@@ -20,5 +20,6 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth'])->group(function() {
     Route::resource('logs', LogController::class);
+    Route::get('/logs/{log}/history', [LogController::class, 'history'])->name('logs.history');
 });
 require __DIR__.'/auth.php';

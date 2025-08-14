@@ -64,5 +64,13 @@ class LogController extends Controller
             ->with('success', 'Log updated successfully. Changes have been recorded.');
     }
 
+    public function history(Log $log)
+    {
+        $activities = $log->activities()->latest()->get();
+
+        return view('logs.history', compact('log', 'activities'));
+    }
+
+
 
 }
