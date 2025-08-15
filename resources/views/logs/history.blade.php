@@ -23,7 +23,7 @@
                     <td class="px-4 py-2">
                         <pre class="text-xs">{{ json_encode($activity->properties->toArray(), JSON_PRETTY_PRINT) }}</pre>
                     </td>
-                    <td class="px-4 py-2">{{ $activity->created_at->format('Y-m-d H:i:s') }}</td>
+                    <td class="px-4 py-2">{{ $activity->created_at->format('D d M Y H:i:s') }}</td>
                 </tr>
             @endforeach
             </tbody>

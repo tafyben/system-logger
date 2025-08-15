@@ -45,6 +45,14 @@ class LogController extends Controller
         return redirect()->route('logs.index')->with('success', 'Log entry added successfully.');
     }
 
+    public function edit(Log $log)
+    {
+        // Fetch types for dropdown
+        $types = \App\Models\LogType::all();
+
+        return view('logs.edit', compact('log', 'types'));
+    }
+
 
     public function update(Request $request, Log $log)
     {

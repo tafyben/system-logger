@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -43,5 +44,10 @@ class Log extends Model
     public function type()
     {
         return $this->belongsTo(LogType::class, 'log_type_id');
+    }
+
+    public function getEventTimeAttribute($value)
+    {
+        return Carbon::parse($value)->format('D d M Y H:i:s');
     }
 }
