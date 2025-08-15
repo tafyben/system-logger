@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Log extends Model
 {
-    use LogsActivity;
+    use SoftDeletes, LogsActivity;
     protected $fillable = [
         'user_id',
         'log_type_id',

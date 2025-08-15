@@ -9,7 +9,8 @@
         <table class="min-w-full border border-gray-300 bg-white shadow-sm rounded">
             <thead class="bg-gray-100">
             <tr>
-                <th class="px-4 py-2 text-left">User</th>
+                <th class="px-4 py-2 text-left">Original Author</th>
+                <th class="px-4 py-2 text-left">Updated By</th>
                 <th class="px-4 py-2 text-left">Event</th>
                 <th class="px-4 py-2 text-left">Changes</th>
                 <th class="px-4 py-2 text-left">Time</th>
@@ -18,6 +19,7 @@
             <tbody>
             @foreach($activities as $activity)
                 <tr class="border-t">
+                    <td class="px-4 py-2">{{ $creator->name ?? 'Unknown' }}</td>
                     <td class="px-4 py-2">{{ $activity->causer->name ?? 'System' }}</td>
                     <td class="px-4 py-2">{{ $activity->description }}</td>
                     <td class="px-4 py-2">
@@ -27,6 +29,7 @@
                 </tr>
             @endforeach
             </tbody>
+
         </table>
 
         <a href="{{ route('logs.index') }}" class="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">

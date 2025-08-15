@@ -75,9 +75,41 @@ class LogController extends Controller
     public function history(Log $log)
     {
         $activities = $log->activities()->latest()->get();
+        $creator = $log->user; // Relationship from Log model
 
-        return view('logs.history', compact('log', 'activities'));
+        return view('logs.history', compact('log', 'activities', 'creator'));
     }
+
+    // Move to Trash
+    public function destroy(Log $log)
+    {
+        $log->delete();
+        return redirect()->route('logs.index')->with('success', 'Log moved to trash.');
+    }
+
+// View Trash
+    public function trash()
+    {
+        $logs = Log::onlyTrashed()->latest()->paginate(10);
+        return view('logs.trash', compact('logs'));
+    }
+
+// Restore from Trash
+    public function restore($id)
+    {
+        $log = Log::onlyTrashed()->findOrFail($id);
+        $log->restore();
+        return redirect()->route('logs.trash')->with('success', 'Log restored successfully.');
+    }
+
+// Permanently Delete
+    public function forceDelete($id)
+    {
+        $log = Log::onlyTrashed()->findOrFail($id);
+        $log->forceDelete();
+        return redirect()->route('logs.trash')->with('success', 'Log permanently deleted.');
+    }
+
 
 
 
