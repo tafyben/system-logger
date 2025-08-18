@@ -137,7 +137,7 @@ class LogController extends Controller
         $histories = Activity::with('causer', 'subject')
             ->where('log_name', 'log_changes') // matches model
             ->orderBy('created_at', 'desc')
-            ->paginate(15);
+            ->paginate(10);
 
         $users = \App\Models\User::all();
 
