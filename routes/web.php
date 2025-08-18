@@ -19,12 +19,17 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth'])->group(function() {
+    /*to be defined before resource controller*/
+    Route::get('/logs/trash', [LogController::class, 'trash'])->name('logs.trash');
+    Route::post('/logs/{id}/restore', [LogController::class, 'restore'])->name('logs.restore');
+    Route::delete('/logs/{id}/force-delete', [LogController::class, 'forceDelete'])->name('logs.forceDelete');
+    Route::get('/logs/audit', [LogController::class, 'audit'])->name('logs.audit');
+    /*to be defined before resource controller*/
+
     Route::resource('logs', LogController::class);
     Route::get('/logs/{log}/history', [LogController::class, 'history'])->name('logs.history');
 
-    Route::get('/logs/trash', [LogController::class, 'trash'])->name('logs.trash');
-    Route::post('/logs/{id}/restore', [LogController::class, 'restore'])->name('logs.restore');
-    Route::delete('/logs/{id}/force-delete', [LogController::class, 'forceDelete'])->name('logs.force-delete');
+
 
 });
 require __DIR__.'/auth.php';

@@ -6,6 +6,7 @@ use App\Models\Log;
 use App\Models\LogType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Activitylog\Models\Activity;
 
 class LogController extends Controller
 {
@@ -81,9 +82,10 @@ class LogController extends Controller
     }
 
     // Move to Trash
-    public function destroy(Log $log)
+    public function destroy($id)
     {
-        $log->delete();
+        $log = Log::findOrFail($id);
+        $log->delete(); // soft delete
         return redirect()->route('logs.index')->with('success', 'Log moved to trash.');
     }
 
@@ -108,6 +110,38 @@ class LogController extends Controller
         $log = Log::onlyTrashed()->findOrFail($id);
         $log->forceDelete();
         return redirect()->route('logs.trash')->with('success', 'Log permanently deleted.');
+    }
+
+
+    public function audit(Request $request)
+    {
+        $query = Activity::with('causer')->where('log_name', 'log')->orderBy('created_at', 'desc');
+
+        // Filters
+        if ($request->filled('action')) {
+            $query->where('description', 'like', "%{$request->action}%");
+        }
+
+        if ($request->filled('user_id')) {
+            $query->where('causer_id', $request->user_id);
+        }
+
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+
+        $histories = Activity::with('causer', 'subject')
+            ->where('log_name', 'log_changes') // matches model
+            ->orderBy('created_at', 'desc')
+            ->paginate(15);
+
+        $users = \App\Models\User::all();
+
+        return view('logs.audit', compact('histories', 'users'));
     }
 
 
