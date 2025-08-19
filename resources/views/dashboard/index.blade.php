@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        <h2 class="text-xl font-semibold leading-tight text-gray-800">
             {{ __('Dashboard') }}
         </h2>
     </x-slot>
@@ -58,56 +58,7 @@
                 </div>
             </div>
 
-            {{-- Charts Section --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white p-6 rounded-xl shadow">
-                    <h3 class="text-lg font-semibold mb-4">System Stats Overview</h3>
-                    <canvas id="barChart"></canvas>
-                </div>
-
-                <div class="bg-white p-6 rounded-xl shadow">
-                    <h3 class="text-lg font-semibold mb-4">Distribution</h3>
-                    <canvas id="pieChart"></canvas>
-                </div>
-            </div>
-
         </div>
     </div>
-
-    {{-- Chart.js CDN --}}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        const chartLabels = @json($chartData['labels']);
-        const chartValues = @json($chartData['values']);
-
-        // Bar Chart
-        new Chart(document.getElementById('barChart'), {
-            type: 'bar',
-            data: {
-                labels: chartLabels,
-                datasets: [{
-                    label: 'Counts',
-                    data: chartValues,
-                    backgroundColor: ['#3b82f6', '#ef4444', '#10b981', '#f59e0b'],
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { display: false } }
-            }
-        });
-
-        // Pie Chart
-        new Chart(document.getElementById('pieChart'), {
-            type: 'pie',
-            data: {
-                labels: chartLabels,
-                datasets: [{
-                    data: chartValues,
-                    backgroundColor: ['#3b82f6', '#ef4444', '#10b981', '#f59e0b'],
-                }]
-            },
-            options: { responsive: true }
-        });
-    </script>
 </x-app-layout>
+
