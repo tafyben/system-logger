@@ -2,32 +2,56 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Log;
+use App\Models\LogType;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // Example placeholder data (replace with real queries later)
+        // Counts
         $stats = [
-            'total_logs' => 120,
-            'deleted_logs' => 15,
-            'users' => 8,
-            'systems' => 5,
+            'total_logs'   => Log::count(),
+            'deleted_logs' => Log::onlyTrashed()->count(), // if using SoftDeletes
+            'users'        => User::count(),
+            'systems'      => LogType::count(),
         ];
 
-        $recentLogs = [
-            ['title' => 'Server Update', 'type' => 'Update', 'user' => 'Admin', 'time' => '2 mins ago'],
-            ['title' => 'PC Added', 'type' => 'Create', 'user' => 'John Doe', 'time' => '10 mins ago'],
-            ['title' => 'Website Patch', 'type' => 'Update', 'user' => 'Jane Doe', 'time' => '30 mins ago'],
-        ];
+        // Recent logs (latest 5)
+        $recentLogs = Log::with(['user', 'type'])
+            ->latest()
+            ->take(5)
+            ->get()
+            ->map(function ($log) {
+                return [
+                    'title' => $log->title,
+                    'type'  => $log->type->name ?? 'N/A',
+                    'user'  => $log->user->name ?? 'System',
+                    'time'  => $log->created_at->diffForHumans(),
+                ];
+            });
 
-        // Chart data placeholder
+        // Chart Data: logs count by type
+        $logsByType = LogType::withCount('logs')->get();
         $chartData = [
-            'labels' => ['Logs', 'Deleted Logs', 'Users', 'Systems'],
-            'values' => [$stats['total_logs'], $stats['deleted_logs'], $stats['users'], $stats['systems']]
+            'labels' => $logsByType->pluck('name'),
+            'data'   => $logsByType->pluck('logs_count'),
         ];
 
-        return view('dashboard', compact('stats', 'recentLogs', 'chartData'));
+        // Chart Data: logs created per day (last 7 days)
+        $logsPerDay = Log::selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->where('created_at', '>=', now()->subDays(7))
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+
+        $chartLogsPerDay = [
+            'labels' => $logsPerDay->pluck('date'),
+            'data'   => $logsPerDay->pluck('count'),
+        ];
+
+        return view('dashboard', compact('stats', 'recentLogs', 'chartData', 'chartLogsPerDay'));
     }
 }

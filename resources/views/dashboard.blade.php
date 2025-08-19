@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        <h2 class="text-xl font-semibold leading-tight text-gray-800">
             {{ __('Dashboard') }}
         </h2>
     </x-slot>
@@ -8,106 +8,91 @@
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
-            {{-- Stats Overview --}}
+            {{-- Stats Cards --}}
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div class="bg-white overflow-hidden shadow rounded-lg p-6">
-                    <div class="text-sm font-medium text-gray-500">Total Logs</div>
-                    <div class="mt-1 text-3xl font-semibold text-gray-900">{{ $stats['total_logs'] }}</div>
+                <div class="bg-white shadow rounded-lg p-6 text-center">
+                    <h3 class="text-lg font-bold">Total Logs</h3>
+                    <p class="text-2xl text-indigo-600">{{ $stats['total_logs'] }}</p>
                 </div>
-
-                <div class="bg-white overflow-hidden shadow rounded-lg p-6">
-                    <div class="text-sm font-medium text-gray-500">Deleted Logs</div>
-                    <div class="mt-1 text-3xl font-semibold text-gray-900">{{ $stats['deleted_logs'] }}</div>
+                <div class="bg-white shadow rounded-lg p-6 text-center">
+                    <h3 class="text-lg font-bold">Deleted Logs</h3>
+                    <p class="text-2xl text-red-600">{{ $stats['deleted_logs'] }}</p>
                 </div>
-
-                <div class="bg-white overflow-hidden shadow rounded-lg p-6">
-                    <div class="text-sm font-medium text-gray-500">Users</div>
-                    <div class="mt-1 text-3xl font-semibold text-gray-900">{{ $stats['users'] }}</div>
+                <div class="bg-white shadow rounded-lg p-6 text-center">
+                    <h3 class="text-lg font-bold">Users</h3>
+                    <p class="text-2xl text-green-600">{{ $stats['users'] }}</p>
                 </div>
-
-                <div class="bg-white overflow-hidden shadow rounded-lg p-6">
-                    <div class="text-sm font-medium text-gray-500">Systems Tracked</div>
-                    <div class="mt-1 text-3xl font-semibold text-gray-900">{{ $stats['systems'] }}</div>
+                <div class="bg-white shadow rounded-lg p-6 text-center">
+                    <h3 class="text-lg font-bold">Systems</h3>
+                    <p class="text-2xl text-purple-600">{{ $stats['systems'] }}</p>
                 </div>
             </div>
 
             {{-- Recent Logs --}}
             <div class="bg-white shadow rounded-lg p-6">
-                <h3 class="text-lg font-semibold text-gray-700 mb-4">Recent Logs</h3>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
-                        </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                        @foreach($recentLogs as $log)
-                            <tr>
-                                <td class="px-4 py-2 text-sm text-gray-700">{{ $log['title'] }}</td>
-                                <td class="px-4 py-2 text-sm text-gray-700">{{ $log['type'] }}</td>
-                                <td class="px-4 py-2 text-sm text-gray-700">{{ $log['user'] }}</td>
-                                <td class="px-4 py-2 text-sm text-gray-500">{{ $log['time'] }}</td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                <h3 class="text-lg font-bold mb-4">Recent Logs</h3>
+                <ul class="divide-y divide-gray-200">
+                    @foreach ($recentLogs as $log)
+                        <li class="py-3 flex justify-between">
+                            <div>
+                                <p class="font-semibold">{{ $log['title'] }}</p>
+                                <p class="text-sm text-gray-500">
+                                    {{ $log['type'] }} • by {{ $log['user'] }}
+                                </p>
+                            </div>
+                            <span class="text-sm text-gray-400">{{ $log['time'] }}</span>
+                        </li>
+                    @endforeach
+                </ul>
             </div>
 
-            {{-- Charts Section --}}
+            {{-- Charts --}}
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white p-6 rounded-xl shadow">
-                    <h3 class="text-lg font-semibold mb-4">System Stats Overview</h3>
-                    <canvas id="barChart"></canvas>
+                <div class="bg-white shadow rounded-lg p-6">
+                    <h3 class="text-lg font-bold mb-4">Logs by Type</h3>
+                    <canvas id="logsByTypeChart"></canvas>
                 </div>
 
-                <div class="bg-white p-6 rounded-xl shadow">
-                    <h3 class="text-lg font-semibold mb-4">Distribution</h3>
-                    <canvas id="pieChart"></canvas>
+                <div class="bg-white shadow rounded-lg p-6">
+                    <h3 class="text-lg font-bold mb-4">Logs per Day (Last 7 Days)</h3>
+                    <canvas id="logsPerDayChart"></canvas>
                 </div>
             </div>
 
         </div>
     </div>
 
-    {{-- Chart.js CDN --}}
+    {{-- Chart.js --}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        const chartLabels = @json($chartData['labels']);
-        const chartValues = @json($chartData['values']);
-
-        // Bar Chart
-        new Chart(document.getElementById('barChart'), {
-            type: 'bar',
+        // Logs by Type
+        const ctx1 = document.getElementById('logsByTypeChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'doughnut',
             data: {
-                labels: chartLabels,
+                labels: @json($chartData['labels']),
                 datasets: [{
-                    label: 'Counts',
-                    data: chartValues,
-                    backgroundColor: ['#3b82f6', '#ef4444', '#10b981', '#f59e0b'],
+                    data: @json($chartData['data']),
+                    backgroundColor: ['#4F46E5', '#EF4444', '#10B981', '#F59E0B'],
                 }]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { display: false } }
             }
         });
 
-        // Pie Chart
-        new Chart(document.getElementById('pieChart'), {
-            type: 'pie',
+        // Logs per Day
+        const ctx2 = document.getElementById('logsPerDayChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'line',
             data: {
-                labels: chartLabels,
+                labels: @json($chartLogsPerDay['labels']),
                 datasets: [{
-                    data: chartValues,
-                    backgroundColor: ['#3b82f6', '#ef4444', '#10b981', '#f59e0b'],
+                    label: 'Logs',
+                    data: @json($chartLogsPerDay['data']),
+                    borderColor: '#2563EB',
+                    backgroundColor: '#93C5FD',
+                    fill: true,
+                    tension: 0.4
                 }]
-            },
-            options: { responsive: true }
+            }
         });
     </script>
 </x-app-layout>
