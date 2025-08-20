@@ -37,6 +37,19 @@
                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
             </div>
 
+            <div class="mb-4">
+                <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">
+                    Notes (Optional)
+                </label>
+                <textarea
+                    name="notes"
+                    id="notes"
+                    rows="4"
+                    class="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                ></textarea>
+            </div>
+
+
             <!-- Event Time -->
             <div>
                 <label for="event_time" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Event Time</label>

@@ -36,7 +36,8 @@ class LogController extends Controller
             'description' => 'nullable|string',
             'affected_system' => 'required|string|max:255',
             'changes' => 'nullable|array',
-            'event_time' => 'required|date'
+            'event_time' => 'required|date',
+            'notes' => 'nullable|string', // new
         ]);
 
         $validated['user_id'] = Auth::id();
@@ -63,6 +64,7 @@ class LogController extends Controller
             'description'     => 'nullable|string',
             'affected_system' => 'required|string|max:255',
             'event_time'      => 'required|date',
+            'notes' => $request->notes, // new
         ]);
 
         $log->update($request->all());

@@ -34,6 +34,19 @@
                           rows="3">{{ old('description', $log->description) }}</textarea>
             </div>
 
+            <div class="mb-4">
+                <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">
+                    Notes (Optional)
+                </label>
+                <textarea
+                    name="notes"
+                    id="notes"
+                    rows="4"
+                    class="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                >{{ old('notes', $log->notes ?? '') }}</textarea>
+            </div>
+
+
             <!-- Affected System -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Affected System</label>

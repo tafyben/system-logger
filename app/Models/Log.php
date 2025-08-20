@@ -18,6 +18,7 @@ class Log extends Model
         'description',
         'affected_system',
         'changes',
+        'notes', // new
         'event_time'
     ];
 
