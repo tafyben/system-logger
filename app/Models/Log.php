@@ -16,7 +16,7 @@ class Log extends Model
         'log_type_id',
         'title',
         'description',
-        'affected_system',
+        'system_id',
         'changes',
         'notes', // new
         'event_time'
@@ -51,5 +51,10 @@ class Log extends Model
     public function getEventTimeAttribute($value)
     {
         return Carbon::parse($value)->format('D d M Y H:i:s');
+    }
+
+    public function system()
+    {
+        return $this->belongsTo(System::class);
     }
 }

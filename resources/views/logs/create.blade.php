@@ -31,10 +31,15 @@
             </div>
 
             <!-- Affected System -->
-            <div>
-                <label for="affected_system" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Affected System</label>
-                <input type="text" id="affected_system" name="affected_system" required
-                       class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+            <div class="mb-4">
+                <label for="system_id" class="block text-sm font-medium text-gray-700 mb-2">
+                    Affected System
+                </label>
+                <select id="system_id" name="system_id" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    @foreach($systems as $system)
+                        <option value="{{ $system->id }}">{{ $system->name }}</option>
+                    @endforeach
+                </select>
             </div>
 
             <div class="mb-4">
@@ -66,4 +71,19 @@
             </div>
         </form>
     </div>
+
+
+        <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+
+        <script>
+            new TomSelect("#system_id",{
+                create: false,
+                sortField: {
+                    field: "text",
+                    direction: "asc"
+                }
+            });
+        </script>
+
 </x-app-layout>

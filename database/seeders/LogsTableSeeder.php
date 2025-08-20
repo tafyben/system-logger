@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Log;
 use App\Models\LogType;
+use App\Models\System;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -31,6 +32,7 @@ class LogsTableSeeder extends Seeder
         // Now seed logs
         $users = User::all();
         $types = LogType::all();
+        $systems = System::pluck('id')->toArray(); // get all system IDs
 
         for ($i = 1; $i <= 20; $i++) {
             Log::create([
@@ -38,7 +40,7 @@ class LogsTableSeeder extends Seeder
                 'log_type_id'         => $types->random()->id,
                 'title'           => fake()->sentence(4),
                 'description'           => fake()->sentence(4),
-                'affected_system' => fake()->randomElement(['Database Server', 'Web Server', 'Email System', 'Router', 'Workstation']),
+                'system_id' => fake()->randomElement($systems), // assign random system
                 'user_id'         => $users->random()->id,
             ]);
         }

@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
         User::factory()->count(9)->create();
         $this->call([
             LogTypeSeeder::class,
+            SystemSeeder::class,
             UserRoleSeeder::class,
             LogsTableSeeder::class,
             ActivityLogSeeder::class,

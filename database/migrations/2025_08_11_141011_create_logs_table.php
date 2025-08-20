@@ -17,7 +17,8 @@ return new class extends Migration
             $table->foreignId('log_type_id')->constrained()->onDelete('cascade');
             $table->string('title');
             $table->text('description')->nullable();
-            $table->string('affected_system'); // e.g., "PC: Dell-01", "Website: intranet.local"
+            // Add system_id
+            $table->foreignId('system_id')->constrained('systems')->onDelete('cascade'); // e.g., "PC: Dell-01", "Website: intranet.local"
             $table->json('changes')->nullable(); // Optional: store before/after
             $table->timestamp('event_time')->useCurrent();
             $table->timestamps();

@@ -41,7 +41,7 @@
                             <tr>
                                 <td class="px-4 py-2">{{ $log->title }}</td>
                                 <td class="px-4 py-2">{{ $log->log_type }}</td>
-                                <td class="px-4 py-2">{{ $log->affected_system }}</td>
+                                <td class="px-4 py-2">{{ $log->system->name }}</td>
                                 <td class="px-4 py-2">{{ $log->deleted_at->format('Y-m-d H:i') }}</td>
                                 <td class="px-4 py-2 text-center">
                                     <div class="inline-flex space-x-2">

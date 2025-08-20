@@ -44,7 +44,7 @@
                         <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-200">{{ $log->event_time }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-200">{{ $log->type->name }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-200">{{ $log->title }}</td>
-                        <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-200">{{ $log->affected_system }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-200">{{ $log->system->name }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-200">{{ $log->user->name }}</td>
                         <td class="px-4 py-2 text-sm text-gray-700">
                             @if($log->activities->count())

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Log;
 use App\Models\LogType;
+use App\Models\System;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\Models\Activity;
@@ -15,7 +16,7 @@ class LogController extends Controller
      */
     public function index()
     {
-        $logs = Log::with(['user', 'type'])
+        $logs = Log::with(['user', 'type', 'system'])
             ->orderBy('event_time', 'desc')
             ->paginate(10);
 
@@ -24,8 +25,9 @@ class LogController extends Controller
 
     public function create()
     {
+        $systems = System::orderBy('name')->get();
         $types = LogType::all();
-        return view('logs.create', compact('types'));
+        return view('logs.create', compact('types', 'systems'));
     }
 
     public function store(Request $request)
@@ -34,7 +36,7 @@ class LogController extends Controller
             'log_type_id' => 'required|exists:log_types,id',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'affected_system' => 'required|string|max:255',
+            'system_id' => 'required|exists:systems,id',
             'changes' => 'nullable|array',
             'event_time' => 'required|date',
             'notes' => 'nullable|string', // new
@@ -50,24 +52,33 @@ class LogController extends Controller
     public function edit(Log $log)
     {
         // Fetch types for dropdown
+        $systems = System::orderBy('name')->get();
         $types = \App\Models\LogType::all();
 
-        return view('logs.edit', compact('log', 'types'));
+        return view('logs.edit', compact('log', 'types', 'systems'));
     }
 
 
     public function update(Request $request, Log $log)
     {
+
         $request->validate([
             'log_type_id'     => 'required|exists:log_types,id',
             'title'           => 'required|string|max:255',
             'description'     => 'nullable|string',
-            'affected_system' => 'required|string|max:255',
+            'system_id'       => 'required|exists:systems,id',
             'event_time'      => 'required|date',
-            'notes' => $request->notes, // new
+            'notes'           => 'nullable|string', // new
         ]);
 
-        $log->update($request->all());
+        $log->update($request->only([
+            'log_type_id',
+            'title',
+            'description',
+            'system_id',
+            'event_time',
+            'notes',
+        ]));
 
         // Spatie automatically records this update with before/after in activity_log
 
