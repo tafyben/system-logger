@@ -17,6 +17,7 @@ class Log extends Model
         'title',
         'description',
         'system_id',
+        'department_id',
         'changes',
         'notes', // new
         'event_time'
@@ -56,5 +57,17 @@ class Log extends Model
     public function system()
     {
         return $this->belongsTo(System::class);
+    }
+
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
+
+    public function location()
+    {
+        // A log gets location through department
+        return $this->hasOneThrough(Location::class, Department::class);
     }
 }
