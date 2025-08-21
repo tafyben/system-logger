@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('location_id')->constrained()->onDelete('cascade');
             $table->string('name'); // e.g. "Business School"
+
+            $table->unique(['location_id', 'name']); // prevent duplicate dept names in same location
             $table->timestamps();
         });
     }

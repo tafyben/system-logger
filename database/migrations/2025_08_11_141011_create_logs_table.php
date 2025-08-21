@@ -19,6 +19,8 @@ return new class extends Migration
             $table->text('description')->nullable();
             // Add system_id
             $table->foreignId('system_id')->constrained('systems')->onDelete('cascade'); // e.g., "PC: Dell-01", "Website: intranet.local"
+            $table->foreignId('department_id')->constrained()->onDelete('cascade'); // NEW
+            $table->foreignId('location_id')->constrained()->onDelete('cascade');   // NEW
             $table->json('changes')->nullable(); // Optional: store before/after
             $table->timestamp('event_time')->useCurrent();
             $table->timestamps();
