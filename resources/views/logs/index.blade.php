@@ -33,6 +33,7 @@
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Title</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">System</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Department[for]</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">User</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Recent Change</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
@@ -45,6 +46,11 @@
                         <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-200">{{ $log->type->name }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-200">{{ $log->title }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-200">{{ $log->system->name }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-200">
+                            <span title="Campus: {{ $log->department->location->name }}">
+                                {{ $log->department->name }}
+                            </span>
+                        </td>
                         <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-200">{{ $log->user->name }}</td>
                         <td class="px-4 py-2 text-sm text-gray-700">
                             @if($log->activities->count())
