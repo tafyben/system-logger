@@ -24,11 +24,12 @@ class DatabaseSeeder extends Seeder
         User::factory()->count(9)->create();
         $this->call([
             LogTypeSeeder::class,
+            LocationDepartmentSeeder::class,
             SystemSeeder::class,
             UserRoleSeeder::class,
             LogsTableSeeder::class,
             ActivityLogSeeder::class,
-            LocationDepartmentSeeder::class
+
 
 
         ]);

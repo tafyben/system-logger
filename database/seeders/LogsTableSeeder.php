@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Department;
 use App\Models\Log;
 use App\Models\LogType;
 use App\Models\System;
@@ -33,14 +34,18 @@ class LogsTableSeeder extends Seeder
         $users = User::all();
         $types = LogType::all();
         $systems = System::pluck('id')->toArray(); // get all system IDs
+        $departments = Department::with('location')->get();
 
         for ($i = 1; $i <= 20; $i++) {
+            $dept = $departments->random(); // pick random department
             Log::create([
                 'event_time'      => Carbon::now()->subDays(rand(0, 30))->format('Y-m-d H:i:s'),
                 'log_type_id'         => $types->random()->id,
                 'title'           => fake()->sentence(4),
                 'description'           => fake()->sentence(4),
                 'system_id' => fake()->randomElement($systems), // assign random system
+                'department_id'  => $dept->id,
+                'location_id'    => $dept->location_id, // get location from department
                 'user_id'         => $users->random()->id,
             ]);
         }

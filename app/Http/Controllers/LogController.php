@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
 use App\Models\Log;
 use App\Models\LogType;
 use App\Models\System;
@@ -16,7 +17,7 @@ class LogController extends Controller
      */
     public function index()
     {
-        $logs = Log::with(['user', 'type', 'system'])
+        $logs = Log::with(['user', 'type', 'system', 'department'])
             ->orderBy('event_time', 'desc')
             ->paginate(10);
 
@@ -27,7 +28,8 @@ class LogController extends Controller
     {
         $systems = System::orderBy('name')->get();
         $types = LogType::all();
-        return view('logs.create', compact('types', 'systems'));
+        $departments = Department::all();
+        return view('logs.create', compact('types', 'systems', 'departments'));
     }
 
     public function store(Request $request)
