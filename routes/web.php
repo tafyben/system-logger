@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\LocationController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +30,10 @@ Route::middleware(['auth'])->group(function() {
     Route::delete('/logs/{id}/force-delete', [LogController::class, 'forceDelete'])->name('logs.forceDelete');
     Route::get('/logs/audit', [LogController::class, 'audit'])->name('logs.audit');
     /*to be defined before resource controller*/
+    // Locations
+    Route::resource('locations', LocationController::class);
+    // Departments
+    Route::resource('departments', DepartmentController::class);
 
     Route::resource('logs', LogController::class);
     Route::get('/logs/{log}/history', [LogController::class, 'history'])->name('logs.history');
