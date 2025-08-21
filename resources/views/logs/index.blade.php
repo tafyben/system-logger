@@ -24,7 +24,12 @@
             </a>
         </div>
 
-
+        <!-- Success Message -->
+        @if(session('success'))
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4">
+                {{ session('success') }}
+            </div>
+        @endif
         <div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-700">

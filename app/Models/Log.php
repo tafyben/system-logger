@@ -18,6 +18,7 @@ class Log extends Model
         'description',
         'system_id',
         'department_id',
+        'location_id',
         'changes',
         'notes', // new
         'event_time'

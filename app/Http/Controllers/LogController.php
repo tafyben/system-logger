@@ -39,13 +39,21 @@ class LogController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'system_id' => 'required|exists:systems,id',
+            'department_id' => 'required|exists:departments,id',
+
             'changes' => 'nullable|array',
             'event_time' => 'required|date',
             'notes' => 'nullable|string', // new
         ]);
 
-        $validated['user_id'] = Auth::id();
 
+
+        // Add location_id from department
+        $department = Department::findOrFail($validated['department_id']);
+        $validated['location_id'] = $department->location_id;
+
+        // making sure user is tracked
+        $validated['user_id'] = Auth::id();
         Log::create($validated);
 
         return redirect()->route('logs.index')->with('success', 'Log entry added successfully.');
@@ -56,8 +64,9 @@ class LogController extends Controller
         // Fetch types for dropdown
         $systems = System::orderBy('name')->get();
         $types = \App\Models\LogType::all();
+        $departments = Department::all();
 
-        return view('logs.edit', compact('log', 'types', 'systems'));
+        return view('logs.edit', compact('log', 'types', 'systems', 'departments'));
     }
 
 
@@ -69,6 +78,7 @@ class LogController extends Controller
             'title'           => 'required|string|max:255',
             'description'     => 'nullable|string',
             'system_id'       => 'required|exists:systems,id',
+            'department_id'   => 'required|exists:departments,id',
             'event_time'      => 'required|date',
             'notes'           => 'nullable|string', // new
         ]);
@@ -78,6 +88,7 @@ class LogController extends Controller
             'title',
             'description',
             'system_id',
+            'department_id',
             'event_time',
             'notes',
         ]));
